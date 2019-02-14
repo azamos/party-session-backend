@@ -13,7 +13,8 @@ class SocketEvent {
       type: this.type,
       payload: this.payload,
       timestamp: this.timestamp,
-      client: this.client.user.username
+      client: this.client.user.username,
+      id: this.id
     };
   }
 
