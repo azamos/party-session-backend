@@ -57,7 +57,11 @@ router.ws("/party", function (ws, req) {
 
   //TODO: add showing this to the connected clients
   ws.on("close", () => {
-    delete clients[currentClient.username]
+    const userLoggedOfSE = new SocketEvent(currentClient,SocketEvent.Events.USER_DISCONNECTED);
+    delete clients[currentClient.username];
+    Object.entries(clients).forEach(([cname, c]) => { //dispatch the new event to all connected clients.
+      userLoggedOfSE.dispatch(c);
+    });
   })
 });
 

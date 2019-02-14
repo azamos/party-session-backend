@@ -31,7 +31,8 @@ class SocketEvent {
 
 SocketEvent.Events = Object.freeze({
   USER_ONLINE: "USER_ONLINE",
-  INCOMING_MSG: "INCOMING_MSG"
+  INCOMING_MSG: "INCOMING_MSG",
+  USER_DISCONNECTED: "USER_DISCONNECTED"
 });
 
 module.exports = SocketEvent;
