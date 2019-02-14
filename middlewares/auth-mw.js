@@ -32,7 +32,7 @@ function authBySession(req, res, next) {
   }
 
   if (req.ws) {
-    req.ws.close();
+    req.ws.close();//If user is not authenticated, close the webSocket
   } else {
     res.status(401).json({ ERR: "You are not logged in." });
   }
