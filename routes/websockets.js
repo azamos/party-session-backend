@@ -8,6 +8,7 @@ const SocketEvent = require("../entities/socket-event");
 
 let clients = {};
 let se = null;
+let userLikedSocketEvent;
 const getConnected = () => Object.entries(clients).map(([cn, c]) => c.user.username); //clients ={username: user}...
 router.ws("/party", function (ws, req) {
   //TODO: What if is the user already connected?(in same or another tab/window/device)
