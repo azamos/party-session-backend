@@ -28,14 +28,6 @@ router.ws("/party", function (ws, req) {
   });
 
   ws.on("message", function (msg) { //on recieving message from client
-
-    //SocketEvent: recievs (client, type, payload) as constuctur args,
-    //and can: (1) return who is the client who triggered the event and so forth.
-    //(2)dispatch an event to another client(if specified in func dispatch)
-    //or to the client who triggered the event himself.
-    //(3)fire- create a new socketEvent who will be able to do these same things.
-    //(type, payload, client, toClient)- are the args.
-    //the func will dispatch an event to the client if defined, else to toClient.
     //if(msg==="is typing...").. if first time, new event.
     if (se === null) {
       se = new SocketEvent(currentClient, SocketEvent.Events.INCOMING_MSG, {
@@ -45,17 +37,33 @@ router.ws("/party", function (ws, req) {
         se.dispatch(c);
       });
     }
-    if (msg != "is typing...") { //means user wants to publish his post
+    if (msg != "is typing..."&&!(msg in clients)) { //means user wants to publish his post
       se.payload.msg = msg;
+      //TODO: if EVENT!=USER_LOGIN than create message instance, and keep message in DB.
       Object.entries(clients).forEach(([cname, c]) => { //dispatch the new event to all connected clients.
         se.dispatch(c);
       });
       //after sending it out...
       se = null;
     }
+    if(msg in clients&& msg!==currentClient.username){//means the a username was send: means it's a like
+
+        //TODO: Oh there is so much potential in here, for example: for the post instance, keeps users who liked this post.
+        //for the user instance, create att usersWhoLikeAPostImade, and trigger event to check if they are friend of user,
+        //And if not, send a pop up to user to ask to add them as friends.
+        if(msg!==currentClient.username){
+          se.likes++;
+          clients[msg].points+=10;
+          console.log(se.likes);
+          se.payload.msg = `${currentClient.username} liked a post made by ${msg}`;
+          Object.entries(clients).forEach(([cname, c]) => { //dispatch the new event to all connected clients.
+            se.dispatch(c);
+          });
+          se = null;
+        }
+    }
   });
 
-  //TODO: add showing this to the connected clients
   ws.on("close", () => {
     const userLoggedOfSE = new SocketEvent(currentClient,SocketEvent.Events.USER_DISCONNECTED);
     delete clients[currentClient.username];

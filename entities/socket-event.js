@@ -1,4 +1,5 @@
 const MD5 = require('md5');
+const ZERO = 0;
 class SocketEvent {
   constructor(client, type, payload) {//in case of usermsg: payload = msg in string.
     this.client = client;
@@ -6,6 +7,7 @@ class SocketEvent {
     this.payload = payload;
     this.timestamp = Date.now();
     this.id = MD5(this.timestamp);
+    this.likes = ZERO;
   }
 
   get data() {
@@ -14,7 +16,8 @@ class SocketEvent {
       payload: this.payload,
       timestamp: this.timestamp,
       client: this.client.user.username,
-      id: this.id
+      id: this.id,
+      likes: this.likes
     };
   }
 
@@ -32,7 +35,8 @@ class SocketEvent {
 SocketEvent.Events = Object.freeze({
   USER_ONLINE: "USER_ONLINE",
   INCOMING_MSG: "INCOMING_MSG",
-  USER_DISCONNECTED: "USER_DISCONNECTED"
+  USER_DISCONNECTED: "USER_DISCONNECTED",
+  USER_LIKED_POST: "USER_LIKED_POST"
 });
 
 module.exports = SocketEvent;
